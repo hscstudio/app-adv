@@ -23,13 +23,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'username',
-            'auth_key',
-            'password_hash',
-            'password_reset_token',
-            //'email:email',
-            //'status',
+            //'auth_key',
+            //'password_hash',
+            //'password_reset_token',
+            'email:email',
+            [
+                'header' => 'Customer',
+                'format' => 'html',
+                'value' => function ($data){
+                    $customer = \common\models\Customer::findOne($data->id);
+                    if($customer){
+                        return Html::a('link',['customer/view','user_id'=>$data->id]);
+                    }
+                    else{
+                        return Html::a('create',['customer/create','user_id'=>$data->id]);
+                    }
+                }
+            ],
+            'status',
             //'created_at',
             //'updated_at',
 
