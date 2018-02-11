@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use common\helpers\Heart;
 
 
 /* @var $this yii\web\View */
@@ -12,7 +13,14 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="reservation-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row">
+        <div class="col-sm-6 lead">
+            <?= Html::encode($this->title) ?>
+        </div>
+        <div class="col-sm-6 text-right">
+            <?= Html::a(Heart::icon('arrow-alt-circle-left'), ['index'], ['class' => 'btn btn-success']) ?>
+        </div>
+    </div>
 
     <?= $this->render('_form', [
         'model' => $model,

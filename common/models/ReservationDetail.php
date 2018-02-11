@@ -3,7 +3,8 @@
 namespace common\models;
 
 use Yii;
-
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 /**
  * This is the model class for table "reservation_detail".
  *
@@ -25,6 +26,14 @@ class ReservationDetail extends \yii\db\ActiveRecord
         return 'reservation_detail';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
+        ];
+    }
+    
     /**
      * @inheritdoc
      */

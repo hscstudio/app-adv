@@ -6,6 +6,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\helpers\Heart;
 
 /**
  * Site controller
@@ -22,7 +23,6 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
                         'allow' => true,
                     ],
                     [
@@ -94,5 +94,38 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    /**
+     * Read image from files
+     */
+    public function actionImage($image)
+    {
+        $image = str_replace(['..'],'',$image);
+        $file = Heart::getUploadPath($image,0);
+        if(file_exists($file)){
+            $mimeType = mime_content_type($file);
+            if(substr($mimeType,0,5)=='image'){
+                return \Yii::$app->response->sendFile($file,null,[
+                    'inline' => true,
+                    'mimeType' => $mimeType,
+                ]);
+            }
+        }
+        return;
+    }
+    
+    public function actionFile($filename,$inline=false)
+    {
+        $filename = str_replace(['..'],'',$filename);
+        $file = Heart::getUploadPath($filename,0);
+        if(file_exists($file)){
+            $mimeType = mime_content_type($file);
+            return \Yii::$app->response->sendFile($file,null,[
+                'inline' => $inline,
+                'mimeType' => $mimeType,
+            ]);
+        }
+        return;
     }
 }

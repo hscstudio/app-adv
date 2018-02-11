@@ -3,7 +3,8 @@
 namespace common\models;
 
 use Yii;
-
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 /**
  * This is the model class for table "goods".
  *
@@ -22,6 +23,8 @@ use Yii;
  */
 class Goods extends \yii\db\ActiveRecord
 {
+    public $image_new;
+
     /**
      * @inheritdoc
      */
@@ -30,6 +33,14 @@ class Goods extends \yii\db\ActiveRecord
         return 'goods';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -40,6 +51,10 @@ class Goods extends \yii\db\ActiveRecord
             [['description'], 'string'],
             [['category_id', 'stock', 'rate', 'created_at', 'updated_at', 'created_by', 'updated_by', 'status'], 'integer'],
             [['name', 'image'], 'string', 'max' => 255],
+            [['image_new'], 'file', 'skipOnEmpty' => true, 
+                'extensions' => 'png, jpg, jpeg',
+                'maxSize' => 1024*1024*1, // 1 MB
+            ],
         ];
     }
 
@@ -53,6 +68,7 @@ class Goods extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'description' => Yii::t('app', 'Description'),
             'image' => Yii::t('app', 'Image'),
+            'image_new' => Yii::t('app', 'Image'),
             'category_id' => Yii::t('app', 'Category ID'),
             'stock' => Yii::t('app', 'Stock'),
             'rate' => Yii::t('app', 'Rate'),
@@ -71,5 +87,12 @@ class Goods extends \yii\db\ActiveRecord
     public static function find()
     {
         return new GoodsQuery(get_called_class());
+    }
+
+    public function getCategory()
+    {
+        return $this->hasOne(
+            GoodsCategory::className(),['id'=>'category_id']
+        );
     }
 }

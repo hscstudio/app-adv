@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use common\helpers\Heart;
+
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
@@ -11,12 +13,18 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="reservation-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
+    <div class="row">
+        <div class="col-sm-6 lead">
+            <?= Heart::icon('calendar-check').' '.Html::encode($this->title) ?>
+        </div>
+        <div class="col-sm-6 text-right">
+        <p>
+        <?= Html::a(Yii::t('app', Heart::icon('calendar-plus').' Create'), ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+        </div>
+    </div>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Reservation'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -40,7 +48,18 @@ $this->params['breadcrumbs'][] = $this->title;
             //'updated_by',
             //'status',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'header' => Heart::icon('edit'),
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'buttons' => [
+                    'update' => function ($url, $model) {
+                        return Html::a(Heart::icon('edit'), $url, [
+                                    'title' => 'Update',
+                        ]);
+                    },
+                ],
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

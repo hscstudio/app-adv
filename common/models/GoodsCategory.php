@@ -3,7 +3,8 @@
 namespace common\models;
 
 use Yii;
-
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 /**
  * This is the model class for table "goods_category".
  *
@@ -19,6 +20,8 @@ use Yii;
  */
 class GoodsCategory extends \yii\db\ActiveRecord
 {
+    public $image_new;
+    
     /**
      * @inheritdoc
      */
@@ -27,6 +30,14 @@ class GoodsCategory extends \yii\db\ActiveRecord
         return 'goods_category';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -37,6 +48,10 @@ class GoodsCategory extends \yii\db\ActiveRecord
             [['description'], 'string'],
             [['created_at', 'updated_at', 'created_by', 'updated_by', 'status'], 'integer'],
             [['name', 'image'], 'string', 'max' => 255],
+            [['image_new'], 'file', 'skipOnEmpty' => true, 
+                'extensions' => 'png, jpg, jpeg',
+                'maxSize' => 1024*1024*1, // 1 MB
+            ],
         ];
     }
 
@@ -50,6 +65,7 @@ class GoodsCategory extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'description' => Yii::t('app', 'Description'),
             'image' => Yii::t('app', 'Image'),
+            'image_new' => Yii::t('app', 'Image'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),

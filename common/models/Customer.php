@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "customer".
@@ -24,12 +26,21 @@ use Yii;
  */
 class Customer extends \yii\db\ActiveRecord
 {
+    public $avatar_new;
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'customer';
+    }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
+        ];
     }
 
     /**
@@ -45,6 +56,10 @@ class Customer extends \yii\db\ActiveRecord
             [['name', 'born', 'avatar'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 50],
             [['user_id'], 'unique'],
+            [['avatar_new'], 'file', 'skipOnEmpty' => true, 
+                'extensions' => 'png, jpg, jpeg',
+                'maxSize' => 1024*1024*1, // 1 MB
+            ],
         ];
     }
 
@@ -60,6 +75,7 @@ class Customer extends \yii\db\ActiveRecord
             'born' => Yii::t('app', 'Born'),
             'birthday' => Yii::t('app', 'Birthday'),
             'avatar' => Yii::t('app', 'Avatar'),
+            'avatar_new' => Yii::t('app', 'Avatar'),
             'address' => Yii::t('app', 'Address'),
             'phone' => Yii::t('app', 'Phone'),
             'level' => Yii::t('app', 'Level'),
@@ -78,5 +94,12 @@ class Customer extends \yii\db\ActiveRecord
     public static function find()
     {
         return new CustomerQuery(get_called_class());
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(
+            User::className(),['id'=>'user_id']
+        );
     }
 }

@@ -3,7 +3,8 @@
 namespace common\models;
 
 use Yii;
-
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 /**
  * This is the model class for table "customer_shipment".
  *
@@ -29,6 +30,14 @@ class CustomerShipment extends \yii\db\ActiveRecord
         return 'customer_shipment';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -40,7 +49,6 @@ class CustomerShipment extends \yii\db\ActiveRecord
             [['address'], 'string'],
             [['title', 'name'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 50],
-            [['user_id'], 'unique'],
         ];
     }
 

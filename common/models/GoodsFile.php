@@ -3,7 +3,8 @@
 namespace common\models;
 
 use Yii;
-
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 /**
  * This is the model class for table "goods_file".
  *
@@ -21,6 +22,7 @@ use Yii;
  */
 class GoodsFile extends \yii\db\ActiveRecord
 {
+    public $file_new;
     /**
      * @inheritdoc
      */
@@ -29,6 +31,14 @@ class GoodsFile extends \yii\db\ActiveRecord
         return 'goods_file';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -36,9 +46,13 @@ class GoodsFile extends \yii\db\ActiveRecord
     {
         return [
             [['goods_id', 'title'], 'required'],
-            [['goods_id', 'type', 'created_at', 'updated_at', 'created_by', 'updated_by', 'status'], 'integer'],
+            [['goods_id', 'type', 'size', 'created_at', 'updated_at', 'created_by', 'updated_by', 'status'], 'integer'],
             [['description'], 'string'],
             [['title', 'file'], 'string', 'max' => 255],
+            [['file_new'], 'file', 'skipOnEmpty' => true, 
+                'extensions' => 'png, jpg, jpeg, pdf, mp4, webm',
+                'maxSize' => 1024*1024*50, // 50 MB 
+            ],
         ];
     }
 
@@ -53,7 +67,9 @@ class GoodsFile extends \yii\db\ActiveRecord
             'title' => Yii::t('app', 'Title'),
             'description' => Yii::t('app', 'Description'),
             'file' => Yii::t('app', 'File'),
+            'file_new' => Yii::t('app', 'File'),
             'type' => Yii::t('app', 'Type'),
+            'size' => Yii::t('app', 'Size'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),

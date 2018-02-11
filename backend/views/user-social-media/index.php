@@ -30,7 +30,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'instagram_id',
             //'github_id',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'header' => Heart::icon('edit'),
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'buttons' => [
+                    'update' => function ($url, $model) {
+                        return Html::a(Heart::icon('edit'), $url, [
+                                    'title' => 'Update',
+                        ]);
+                    },
+                ],
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

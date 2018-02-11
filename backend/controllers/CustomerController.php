@@ -4,10 +4,13 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Customer;
+use backend\models\CustomerSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\helpers\Heart;
+use yii\web\UploadedFile;
 
 /**
  * CustomerController implements the CRUD actions for Customer model.
@@ -35,11 +38,11 @@ class CustomerController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Customer::find(),
-        ]);
+        $searchModel = new CustomerSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -52,8 +55,10 @@ class CustomerController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $model->birthday = Heart::dateFormat($model->birthday,'Y-m-d','d/m/Y');
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -68,7 +73,16 @@ class CustomerController extends Controller
             'user_id' => $user_id
         ]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->birthday = Heart::dateFormat($model->birthday,'d/m/Y','Y-m-d');
+            $avatar_new = UploadedFile::getInstance($model, 'avatar_new');
+            if ($avatar_new) {
+                $filename = $avatar_new->baseName . '.' . $avatar_new->extension;
+                $path = Heart::getUploadPath('customers/'.$user_id.'/');
+                $upload = $avatar_new->saveAs($path . $filename);
+                if($upload) $model->avatar = $filename;
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->user_id]);
         }
 
@@ -88,9 +102,23 @@ class CustomerController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->birthday = Heart::dateFormat($model->birthday,'d/m/Y','Y-m-d');
+            $avatar_new = UploadedFile::getInstance($model, 'avatar_new');
+            if ($avatar_new) {
+                $filename = $avatar_new->baseName . '.' . $avatar_new->extension;
+                $path = Heart::getUploadPath('customers/'.$id.'/');
+                $upload = $avatar_new->saveAs($path . $filename);
+                if($upload) {
+                    @unlink($path . $model->avatar);
+                    $model->avatar = $filename;
+                }    
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->user_id]);
         }
+
+        $model->birthday = Heart::dateFormat($model->birthday,'Y-m-d','d/m/Y');
 
         return $this->render('update', [
             'model' => $model,
@@ -106,8 +134,13 @@ class CustomerController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $filename = $model->avatar;
+        if($model->delete()){
+            $path = Heart::getUploadPath('customers/'.$id.'/');
+            @unlink($path . $filename);
+        }
+            
         return $this->redirect(['index']);
     }
 

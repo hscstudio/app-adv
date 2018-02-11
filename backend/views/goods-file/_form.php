@@ -1,7 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+use kartik\widgets\ActiveForm;
+use kartik\widgets\SwitchInput;
+use kartik\widgets\FileInput;
+use common\helpers\Heart;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\GoodsFile */
@@ -12,30 +16,93 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'goods_id')->textInput() ?>
+    <?= $form->field($model, 'goods_id')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true, 'class' => 'input-sm']) ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'description')->textarea(['rows' => 3, 'class' => 'input-sm']) ?>
 
-    <?= $form->field($model, 'file')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'file')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'type')->textInput() ?>
+    <?= $form->field($model, 'file_new')->widget(FileInput::classname(), [
+        'pluginOptions' => [
+            'previewFileType' => 'any',
+            'allowedFileExtensions'=>['jpg','jpeg','png','pdf','mp4','webm'],
+            'mainClass' => 'input-group-sm'
+        ],
+    ]) ?>
+    <?php 
+    $file_source = Url::to([
+            'site/file',
+            'filename'=>'goods-file/'.$model->goods_id.'/'.$model->file,
+            'inline'=>true
+        ],true);
+    if($model->type==0){
+        echo '<img src="'.$file_source.'" class="displayMaxHeight">';
+    }
+    else if($model->type==1){
+        echo '<object data="'.$file_source.'" type="application/pdf" width="100%" height="100%">
+                <p>Your browser does not support PDFs, please download PDF file 
+                <a href="'.$file_source.'">click here</a>.</p>
+                </object>';
+        ?>
+        <!-- insert in the document body -->
+        <?php
+        //echo 
+    }
+    else if($model->type==2){        
+        echo '<video controls src="'.$file_source.'" type="video/mp4"       
+                    class="displayMaxHeight">
+                    <p>Your browser does not support the video element.</p>
+                </video>';
+    }
+    ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
+    <?php
+    $types = ['0'=>'image','1'=>'pdf','2'=>'video'];
+    echo $form->field($model, 'type')->radioButtonGroup($types, [
+        'class' => 'btn-group-sm',
+        'itemOptions' => ['labelOptions' => ['class' => 'btn btn-warning']]
+    ]);
+    ?>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
-    <?= $form->field($model, 'status')->textInput() ?>
+    <?= $form->field($model, 'status')->widget(SwitchInput::classname(), [
+        'pluginOptions' => ['size' => 'small'],
+        ]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Heart::icon('save').' '.Yii::t('app', 'Save'), ['class' => 'btn btn-sm btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$this->registerCss('
+        div#goodsfile-type{
+            display:block;
+            clear:both;
+            margin-bottom:50px;
+        }
+
+        .displayMaxHeight{
+            max-height:200px;
+        }
+
+        .preview-file video{
+            border:1px solid #ddd;
+            border-radius:5px;
+        }
+
+        .preview-file img{
+            border:1px solid #ddd;
+            border-radius:5px;
+        }
+
+        .preview-file object{
+            border:1px solid #ddd;
+            border-radius:5px;
+        }
+')
+
+?>

@@ -4,10 +4,13 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\GoodsCategory;
+use backend\models\GoodsCategorySearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\helpers\Heart;
+use yii\web\UploadedFile;
 
 /**
  * GoodsCategoryController implements the CRUD actions for GoodsCategory model.
@@ -35,11 +38,11 @@ class GoodsCategoryController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => GoodsCategory::find(),
-        ]);
+        $searchModel = new GoodsCategorySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -66,7 +69,15 @@ class GoodsCategoryController extends Controller
     {
         $model = new GoodsCategory();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $image_new = UploadedFile::getInstance($model, 'image_new');
+            if ($model->save() and $image_new) {
+                $filename = $image_new->baseName . '.' . $image_new->extension;
+                $path = Heart::getUploadPath('goods-categories/'.$model->id.'/');
+                $upload = $image_new->saveAs($path . $filename);
+                if($upload) $model->image = $filename;
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -86,7 +97,18 @@ class GoodsCategoryController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $image_new = UploadedFile::getInstance($model, 'image_new');
+            if ($image_new) {
+                $filename = $image_new->baseName . '.' . $image_new->extension;
+                $path = Heart::getUploadPath('goods-categories/'.$id.'/');
+                $upload = $image_new->saveAs($path . $filename);
+                if($upload) {
+                    @unlink($path . $model->image);
+                    $model->image = $filename;
+                }    
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -104,7 +126,12 @@ class GoodsCategoryController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $filename = $model->image;
+        if($model->delete()){
+            $path = Heart::getUploadPath('goods-categories/'.$id.'/');
+            @unlink($path . $filename);
+        }
 
         return $this->redirect(['index']);
     }
@@ -124,4 +151,25 @@ class GoodsCategoryController extends Controller
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+
+    public function actionList($q = null, $id = null) 
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+        if ($id > 0) {
+            $cat = GoodsCategory::findOne($id);
+            if($cat) $out['results'] = ['id' => $id, 'text' => $cat->name];
+        }
+        else {
+            $data = GoodsCategory::find()
+                ->select(['id', 'text'=>'name'])
+                ->filterWhere(['like', 'name', $q])
+                ->limit(20)
+                ->asArray()
+                ->all();
+            $out['results'] = array_values($data);
+        }
+        return $out;
+    }
+    
 }

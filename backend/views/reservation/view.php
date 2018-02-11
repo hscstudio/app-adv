@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use common\helpers\Heart;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Reservation */

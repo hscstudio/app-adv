@@ -19,11 +19,14 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
         'y' => 
         array (
             'yii\\swiftmailer\\' => 16,
+            'yii\\imagine\\' => 12,
+            'yii\\httpclient\\' => 15,
             'yii\\gii\\' => 8,
             'yii\\faker\\' => 10,
             'yii\\debug\\' => 10,
             'yii\\composer\\' => 13,
             'yii\\bootstrap\\' => 14,
+            'yii\\authclient\\' => 15,
             'yii\\' => 4,
         ),
         'p' => 
@@ -42,13 +45,19 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
             'kartik\\select2\\' => 15,
             'kartik\\rating\\' => 14,
             'kartik\\range\\' => 13,
+            'kartik\\popover\\' => 15,
+            'kartik\\plugins\\popover\\' => 23,
             'kartik\\plugins\\fileinput\\' => 25,
             'kartik\\plugins\\depdrop\\' => 23,
+            'kartik\\number\\' => 14,
             'kartik\\growl\\' => 13,
             'kartik\\form\\' => 12,
             'kartik\\file\\' => 12,
+            'kartik\\editable\\' => 16,
+            'kartik\\dropdown\\' => 16,
             'kartik\\depdrop\\' => 15,
             'kartik\\datetime\\' => 16,
+            'kartik\\daterange\\' => 17,
             'kartik\\date\\' => 12,
             'kartik\\color\\' => 13,
             'kartik\\base\\' => 12,
@@ -107,6 +116,14 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-swiftmailer',
         ),
+        'yii\\imagine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-imagine',
+        ),
+        'yii\\httpclient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-httpclient',
+        ),
         'yii\\gii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-gii',
@@ -126,6 +143,10 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
         'yii\\bootstrap\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-bootstrap',
+        ),
+        'yii\\authclient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-authclient/src',
         ),
         'yii\\' => 
         array (
@@ -177,6 +198,14 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-rangeinput',
         ),
+        'kartik\\popover\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-popover-x',
+        ),
+        'kartik\\plugins\\popover\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/bootstrap-popover-x',
+        ),
         'kartik\\plugins\\fileinput\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/bootstrap-fileinput',
@@ -184,6 +213,10 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
         'kartik\\plugins\\depdrop\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/dependent-dropdown',
+        ),
+        'kartik\\number\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-number',
         ),
         'kartik\\growl\\' => 
         array (
@@ -197,6 +230,14 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-fileinput',
         ),
+        'kartik\\editable\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-editable',
+        ),
+        'kartik\\dropdown\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-dropdown-x',
+        ),
         'kartik\\depdrop\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-depdrop',
@@ -204,6 +245,10 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
         'kartik\\datetime\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-datetimepicker',
+        ),
+        'kartik\\daterange\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-date-range',
         ),
         'kartik\\date\\' => 
         array (
@@ -306,6 +351,13 @@ class ComposerStaticInitef4313ee6dc944544216b046237310a9
             'Prophecy\\' => 
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
+            ),
+        ),
+        'I' => 
+        array (
+            'Imagine' => 
+            array (
+                0 => __DIR__ . '/..' . '/imagine/imagine/lib',
             ),
         ),
         'H' => 

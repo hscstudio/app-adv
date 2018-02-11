@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use common\models\Customer;
 
 /**
  * This is the model class for table "user".
@@ -13,6 +14,7 @@ use Yii;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
+ * @property int $level
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
@@ -34,7 +36,7 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['level', 'status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
@@ -55,6 +57,7 @@ class User extends \yii\db\ActiveRecord
             'password_hash' => Yii::t('app', 'Password Hash'),
             'password_reset_token' => Yii::t('app', 'Password Reset Token'),
             'email' => Yii::t('app', 'Email'),
+            'level' => Yii::t('app', 'Level'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -68,5 +71,12 @@ class User extends \yii\db\ActiveRecord
     public static function find()
     {
         return new UserQuery(get_called_class());
+    }
+
+    public function getCustomer()
+    {
+        return $this->hasOne(
+            Customer::className(),['user_id'=>'id']
+        );
     }
 }

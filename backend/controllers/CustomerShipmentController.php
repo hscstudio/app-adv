@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\Customer;
 use common\models\CustomerShipment;
+use backend\models\CustomerShipmentSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -33,14 +35,18 @@ class CustomerShipmentController extends Controller
      * Lists all CustomerShipment models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex(int $user_id)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => CustomerShipment::find(),
+        $customer = Customer::findOne($user_id);
+        $searchModel = new CustomerShipmentSearch([
+            'user_id' => $user_id,
         ]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'customer' => $customer,
         ]);
     }
 
@@ -62,9 +68,11 @@ class CustomerShipmentController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate(int $user_id)
     {
-        $model = new CustomerShipment();
+        $model = new CustomerShipment([
+            'user_id' => $user_id
+        ]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

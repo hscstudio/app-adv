@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use common\helpers\Heart;
+
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
@@ -31,7 +33,18 @@ $this->params['breadcrumbs'][] = $this->title;
             //'updated_by',
             //'status',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'header' => Heart::icon('edit'),
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'buttons' => [
+                    'update' => function ($url, $model) {
+                        return Html::a(Heart::icon('edit'), $url, [
+                                    'title' => 'Update',
+                        ]);
+                    },
+                ],
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

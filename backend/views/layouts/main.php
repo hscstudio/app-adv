@@ -4,13 +4,18 @@
 /* @var $content string */
 
 use backend\assets\AppAsset;
+use backend\assets\FontAwesomeAsset;
+use backend\assets\PdfObjectAsset;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use common\widgets\Alert;
+use kartik\widgets\AlertBlock;
+use common\helpers\Heart;
 
 AppAsset::register($this);
+FontAwesomeAsset::register($this);
+PdfObjectAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -42,10 +47,11 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => 'Manage', 'items' => [
-                ['label' => 'User', 'url' => ['/user/index']],
-                ['label' => 'Customer', 'url' => ['/customer/index']],
-                ['label' => 'Goods', 'url' => ['/goods/index']],
-                ['label' => 'Reservation', 'url' => ['/reservation/index']],
+                ['label' => Heart::icon('users').' User', 'url' => ['/user/index']],
+                ['label' => Heart::icon('id-card').' Customer', 'url' => ['/customer/index']],
+                ['label' => Heart::icon('tags').' Goods Category', 'url' => ['/goods-category/index']],
+                ['label' => Heart::icon('cubes').' Goods', 'url' => ['/goods/index']],
+                ['label' => Heart::icon('calendar-check').' Reservation', 'url' => ['/reservation/index']],
             ]];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
@@ -59,6 +65,7 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
+        'encodeLabels' => false, 
     ]);
     NavBar::end();
     ?>
@@ -67,7 +74,12 @@ AppAsset::register($this);
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
-        <?= Alert::widget() ?>
+        <?php
+        echo AlertBlock::widget([
+            'type' => AlertBlock::TYPE_GROWL,
+            'useSessionFlash' => true
+        ]);
+        ?>
         <?= $content ?>
     </div>
 </div>

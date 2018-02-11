@@ -4,10 +4,14 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Goods;
+use common\models\GoodsCategory;
+use backend\models\GoodsSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\helpers\Heart;
+use yii\web\UploadedFile;
 
 /**
  * GoodsController implements the CRUD actions for Goods model.
@@ -35,12 +39,16 @@ class GoodsController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Goods::find(),
-        ]);
-
+        $searchModel = new GoodsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $categories = GoodsCategory::find()
+            ->select(['id','name'])
+            ->asArray()
+            ->all();
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'categories' => $categories
         ]);
     }
 
@@ -66,7 +74,15 @@ class GoodsController extends Controller
     {
         $model = new Goods();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $image_new = UploadedFile::getInstance($model, 'image_new');
+            if ($model->save() and $image_new) {
+                $filename = $image_new->baseName . '.' . $image_new->extension;
+                $path = Heart::getUploadPath('goods/'.$model->id.'/');
+                $upload = $image_new->saveAs($path . $filename);
+                if($upload) $model->image = $filename;
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -86,7 +102,18 @@ class GoodsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $image_new = UploadedFile::getInstance($model, 'image_new');
+            if ($image_new) {
+                $filename = $image_new->baseName . '.' . $image_new->extension;
+                $path = Heart::getUploadPath('goods/'.$id.'/');
+                $upload = $image_new->saveAs($path . $filename);
+                if($upload) {
+                    @unlink($path . $model->image);
+                    $model->image = $filename;
+                }    
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

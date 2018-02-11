@@ -20,7 +20,7 @@ class m180204_043601_create_customer_shipment_table extends Migration
 
         $this->createTable('customer_shipment', [
             'id' => $this->primaryKey(),
-            'user_id' => $this->integer()->unique()->notNull(),
+            'user_id' => $this->integer()->notNull(),
             'title' => $this->string(255)->notNull(),
             'name' => $this->string(255)->notNull(),
             'address' => $this->text(),
