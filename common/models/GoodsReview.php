@@ -77,4 +77,11 @@ class GoodsReview extends \yii\db\ActiveRecord
     {
         return new GoodsReviewQuery(get_called_class());
     }
+
+    public function getGoods()
+    {
+        return $this->hasOne(
+            Goods::className(),['id'=>'goods_id']
+        );
+    }
 }

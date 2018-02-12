@@ -9,7 +9,7 @@ use common\helpers\Heart;
 $this->title = Yii::t('app', 'Update: {nameAttribute}', [
     'nameAttribute' => $model->title,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Files'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Files'), 'url' => ['index','goods_id'=>$model->goods_id]];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>

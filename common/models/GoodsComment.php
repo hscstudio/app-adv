@@ -78,4 +78,11 @@ class GoodsComment extends \yii\db\ActiveRecord
     {
         return new GoodsCommentQuery(get_called_class());
     }
+
+    public function getGoods()
+    {
+        return $this->hasOne(
+            Goods::className(),['id'=>'goods_id']
+        );
+    }
 }

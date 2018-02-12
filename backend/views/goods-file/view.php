@@ -8,7 +8,7 @@ use common\helpers\Heart;
 /* @var $model common\models\GoodsFile */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Files'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Files'), 'url' => ['index','goods_id'=>$model->goods_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="goods-file-view">

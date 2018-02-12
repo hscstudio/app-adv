@@ -13,30 +13,71 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="goods-comment-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
-
+    <div class="row">
+    <div class="col-sm-6 lead">
+        <?= Heart::icon('comments').' '.Html::encode($this->title) ?>
+    </div>
+    <div class="col-sm-6 text-right">
     <p>
-        <?= Html::a(Yii::t('app', 'Create Goods Comment'), ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::a(Heart::icon('arrow-alt-circle-left').' Back', ['goods/view','id'=>$goods->id], ['class' => 'btn btn-sm btn-default']) ?>
+    <?= Html::a(Yii::t('app', Heart::icon('plus-circle').' Create'), ['create','goods_id'=>$goods->id], ['class' => 'btn btn-sm btn-success']) ?>
     </p>
+    </div>
+    </div>
+
+    <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'reply_id',
-            'goods_id',
-            'user_id',
-            'review:ntext',
-            //'response_admin:ntext',
-            //'created_at',
+            //'id',
+            //[
+            //    'attribute'=>'reply_id',
+            //],
+            //'goods_id',
+            [
+                'attribute'=>'user_id',
+                'filter' => false,
+                'value'=>function($data){
+                    return Heart::getUser($data->user_id);
+                }
+            ],
+            //'review:ntext',
+            [
+                'attribute'=>'review',
+                'format'=>'html',
+                'value' => function($data){
+                    return Html::a($data->review,['view','id'=>$data->goods_id],[
+                        ]);
+                }
+            ],
+            'response_admin:ntext',
+            [
+                'attribute'=>'created_at',
+                'filter' => false,
+                'format' => 'html',
+                'value'=>function($data){
+                    return 
+                        Html::tag('span',date('d/M/Y H:i:s',$data->created_at),['class'=>'label label-default']);
+                }
+            ],
             //'updated_at',
             //'created_by',
             //'updated_by',
-            //'status',
-
+            [
+                'attribute' => 'status',
+                'filter' => false,
+                'format' => 'html',
+                'value' => function($data){
+                    $status = ($data->status==1)?'ON':'OFF';
+                    $label = ($data->status==1)?'success':'danger';
+                    return Html::tag('span',$status,[
+                        'class' => 'label label-'.$label
+                    ]);
+                }
+            ],
             [
                 'header' => Heart::icon('edit'),
                 'class' => 'yii\grid\ActionColumn',

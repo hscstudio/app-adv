@@ -86,4 +86,11 @@ class GoodsFile extends \yii\db\ActiveRecord
     {
         return new GoodsFileQuery(get_called_class());
     }
+
+    public function getGoods()
+    {
+        return $this->hasOne(
+            Goods::className(),['id'=>'goods_id']
+        );
+    }
 }

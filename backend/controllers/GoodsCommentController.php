@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\Goods;
 use common\models\GoodsComment;
+use backend\models\GoodsCommentSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -33,14 +35,20 @@ class GoodsCommentController extends Controller
      * Lists all GoodsComment models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex(int $goods_id)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => GoodsComment::find(),
-        ]);
+        $goods = Goods::findOne($goods_id);
+        $searchModel = new GoodsCommentSearch(['goods_id' => $goods_id]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->sort->defaultOrder = [
+            'reply_id'=>SORT_ASC,
+            'created_at'=>SORT_ASC
+        ];
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'goods' => $goods,
         ]);
     }
 
@@ -62,9 +70,9 @@ class GoodsCommentController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate(int $goods_id)
     {
-        $model = new GoodsComment();
+        $model = new GoodsComment(['goods_id' => $goods_id,]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
