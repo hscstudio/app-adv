@@ -27,6 +27,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class Reservation extends \yii\db\ActiveRecord
 {
+    public $booking_date, $payment_proof_new;
     /**
      * @inheritdoc
      */
@@ -51,10 +52,13 @@ class Reservation extends \yii\db\ActiveRecord
         return [
             [['user_id', 'start', 'end'], 'required'],
             [['user_id', 'bill', 'customer_shipment', 'paid_status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'status'], 'integer'],
-            [['start', 'end'], 'safe'],
+            [['start', 'end', 'booking_date'], 'safe'],
             [['warranty', 'admin_note'], 'string'],
             [['customer_note', 'payment_proof'], 'string', 'max' => 255],
-            [['user_id'], 'unique'],
+            [['payment_proof_new'], 'file', 'skipOnEmpty' => true, 
+                'extensions' => 'png, jpg, jpeg, pdf',
+                'maxSize' => 1024*1024*1, // 1 MB 
+            ],
         ];
     }
 
@@ -68,11 +72,13 @@ class Reservation extends \yii\db\ActiveRecord
             'user_id' => Yii::t('app', 'User ID'),
             'start' => Yii::t('app', 'Start'),
             'end' => Yii::t('app', 'End'),
+            'booking_date' => Yii::t('app', 'Booking date'),
             'warranty' => Yii::t('app', 'Warranty'),
             'bill' => Yii::t('app', 'Bill'),
             'customer_shipment' => Yii::t('app', 'Customer Shipment'),
             'customer_note' => Yii::t('app', 'Customer Note'),
             'payment_proof' => Yii::t('app', 'Payment Proof'),
+            'payment_proof_new' => Yii::t('app', 'Payment Proof'),
             'paid_status' => Yii::t('app', 'Paid Status'),
             'admin_note' => Yii::t('app', 'Admin Note'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -90,5 +96,19 @@ class Reservation extends \yii\db\ActiveRecord
     public static function find()
     {
         return new ReservationQuery(get_called_class());
+    }
+
+    public function getCustomer()
+    {
+        return $this->hasOne(
+            Customer::className(),['user_id'=>'user_id']
+        );
+    }
+
+    public function getShipment()
+    {
+        return $this->hasOne(
+            CustomerShipment::className(),['id'=>'customer_shipment']
+        );
     }
 }

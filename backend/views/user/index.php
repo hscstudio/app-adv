@@ -12,7 +12,7 @@ use common\helpers\Heart;
 $this->title = Yii::t('app', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-index">
+<div class="card">
     <div class="row">
         <div class="col-sm-6 lead">
             <?= Heart::icon('users').' '.Html::encode($this->title) ?>

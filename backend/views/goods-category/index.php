@@ -12,7 +12,7 @@ use common\helpers\Heart;
 $this->title = Yii::t('app', 'Goods Categories');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="goods-category-index">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">

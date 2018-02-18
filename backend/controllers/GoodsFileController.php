@@ -98,6 +98,7 @@ class GoodsFileController extends Controller
                 }
             }
             $model->save();
+            Yii::$app->session->setFlash('success', 'Create successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -140,6 +141,7 @@ class GoodsFileController extends Controller
                 }
             }
             $model->save();
+            Yii::$app->session->setFlash('success', 'Update successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -158,7 +160,7 @@ class GoodsFileController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', 'Delete successful');
         return $this->redirect(['index']);
     }
 

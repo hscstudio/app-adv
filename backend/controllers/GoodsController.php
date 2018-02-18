@@ -83,6 +83,7 @@ class GoodsController extends Controller
                 if($upload) $model->image = $filename;
             }
             $model->save();
+            Yii::$app->session->setFlash('success', 'Create successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -114,6 +115,7 @@ class GoodsController extends Controller
                 }    
             }
             $model->save();
+            Yii::$app->session->setFlash('success', 'Update successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -132,7 +134,7 @@ class GoodsController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', 'Delete successful');
         return $this->redirect(['index']);
     }
 

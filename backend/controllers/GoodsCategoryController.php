@@ -78,6 +78,7 @@ class GoodsCategoryController extends Controller
                 if($upload) $model->image = $filename;
             }
             $model->save();
+            Yii::$app->session->setFlash('success', 'Create successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -109,6 +110,7 @@ class GoodsCategoryController extends Controller
                 }    
             }
             $model->save();
+            Yii::$app->session->setFlash('success', 'Update successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -131,6 +133,7 @@ class GoodsCategoryController extends Controller
         if($model->delete()){
             $path = Heart::getUploadPath('goods-categories/'.$id.'/');
             @unlink($path . $filename);
+            Yii::$app->session->setFlash('success', 'Delete successful');
         }
 
         return $this->redirect(['index']);

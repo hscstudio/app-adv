@@ -83,6 +83,7 @@ class CustomerController extends Controller
                 if($upload) $model->avatar = $filename;
             }
             $model->save();
+            Yii::$app->session->setFlash('success', 'Create successful');
             return $this->redirect(['view', 'id' => $model->user_id]);
         }
 
@@ -115,6 +116,7 @@ class CustomerController extends Controller
                 }    
             }
             $model->save();
+            Yii::$app->session->setFlash('success', 'Update successful');
             return $this->redirect(['view', 'id' => $model->user_id]);
         }
 
@@ -139,6 +141,7 @@ class CustomerController extends Controller
         if($model->delete()){
             $path = Heart::getUploadPath('customers/'.$id.'/');
             @unlink($path . $filename);
+            Yii::$app->session->setFlash('success', 'Delete successful');
         }
             
         return $this->redirect(['index']);

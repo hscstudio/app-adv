@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use common\helpers\Heart;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\ReservationDetail */
@@ -16,8 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->reservation_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->reservation_id], [
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'reservation_id' => $model->reservation_id, 'goods_id' => $model->goods_id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'reservation_id' => $model->reservation_id, 'goods_id' => $model->goods_id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),

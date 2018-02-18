@@ -14,7 +14,7 @@ use kartik\dropdown\DropdownX;
 $this->title = Yii::t('app', 'Goods');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="goods-index">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">

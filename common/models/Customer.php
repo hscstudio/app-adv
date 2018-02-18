@@ -17,7 +17,9 @@ use yii\behaviors\TimestampBehavior;
  * @property string $avatar
  * @property string $address
  * @property string $phone
+ * @property string $id_card
  * @property int $level
+ * @property int $point
  * @property int $created_at
  * @property int $updated_at
  * @property int $created_by
@@ -26,7 +28,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class Customer extends \yii\db\ActiveRecord
 {
-    public $avatar_new;
+    public $avatar_new, $id_card_new;
     /**
      * @inheritdoc
      */
@@ -50,13 +52,13 @@ class Customer extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'name'], 'required'],
-            [['user_id', 'gender', 'level', 'created_at', 'updated_at', 'created_by', 'updated_by', 'status'], 'integer'],
+            [['user_id', 'gender', 'level', 'point', 'created_at', 'updated_at', 'created_by', 'updated_by', 'status'], 'integer'],
             [['birthday'], 'safe'],
             [['address'], 'string'],
-            [['name', 'born', 'avatar'], 'string', 'max' => 255],
+            [['name', 'born', 'avatar', 'id_card'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 50],
             [['user_id'], 'unique'],
-            [['avatar_new'], 'file', 'skipOnEmpty' => true, 
+            [['avatar_new', 'id_card_new'], 'file', 'skipOnEmpty' => true, 
                 'extensions' => 'png, jpg, jpeg',
                 'maxSize' => 1024*1024*1, // 1 MB
             ],
@@ -78,7 +80,10 @@ class Customer extends \yii\db\ActiveRecord
             'avatar_new' => Yii::t('app', 'Avatar'),
             'address' => Yii::t('app', 'Address'),
             'phone' => Yii::t('app', 'Phone'),
+            'id_card' => Yii::t('app', 'ID Card'),
+            'id_card_new' => Yii::t('app', 'ID Card'),
             'level' => Yii::t('app', 'Level'),
+            'point' => Yii::t('app', 'Point'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),

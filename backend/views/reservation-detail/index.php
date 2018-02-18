@@ -3,9 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-use common\helpers\Heart;
-
 /* @var $this yii\web\View */
+/* @var $searchModel backend\models\ReservationDetailSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Reservation Details');
@@ -15,6 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('app', 'Create Reservation Detail'), ['create'], ['class' => 'btn btn-success']) ?>
@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -33,18 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'updated_by',
             //'status',
 
-            [
-                'header' => Heart::icon('edit'),
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{update}',
-                'buttons' => [
-                    'update' => function ($url, $model) {
-                        return Html::a(Heart::icon('edit'), $url, [
-                                    'title' => 'Update',
-                        ]);
-                    },
-                ],
-            ],
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

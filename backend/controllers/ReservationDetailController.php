@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\ReservationDetail;
-use yii\data\ActiveDataProvider;
+use backend\models\ReservationDetailSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,25 +35,26 @@ class ReservationDetailController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => ReservationDetail::find(),
-        ]);
+        $searchModel = new ReservationDetailSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
      * Displays a single ReservationDetail model.
-     * @param integer $id
+     * @param integer $reservation_id
+     * @param integer $goods_id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($reservation_id, $goods_id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($reservation_id, $goods_id),
         ]);
     }
 
@@ -67,7 +68,7 @@ class ReservationDetailController extends Controller
         $model = new ReservationDetail();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->reservation_id]);
+            return $this->redirect(['view', 'reservation_id' => $model->reservation_id, 'goods_id' => $model->goods_id]);
         }
 
         return $this->render('create', [
@@ -78,16 +79,17 @@ class ReservationDetailController extends Controller
     /**
      * Updates an existing ReservationDetail model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
+     * @param integer $reservation_id
+     * @param integer $goods_id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($reservation_id, $goods_id)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($reservation_id, $goods_id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->reservation_id]);
+            return $this->redirect(['view', 'reservation_id' => $model->reservation_id, 'goods_id' => $model->goods_id]);
         }
 
         return $this->render('update', [
@@ -98,13 +100,14 @@ class ReservationDetailController extends Controller
     /**
      * Deletes an existing ReservationDetail model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param integer $reservation_id
+     * @param integer $goods_id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($reservation_id, $goods_id)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($reservation_id, $goods_id)->delete();
 
         return $this->redirect(['index']);
     }
@@ -112,13 +115,14 @@ class ReservationDetailController extends Controller
     /**
      * Finds the ReservationDetail model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
+     * @param integer $reservation_id
+     * @param integer $goods_id
      * @return ReservationDetail the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($reservation_id, $goods_id)
     {
-        if (($model = ReservationDetail::findOne($id)) !== null) {
+        if (($model = ReservationDetail::findOne(['reservation_id' => $reservation_id, 'goods_id' => $goods_id])) !== null) {
             return $model;
         }
 

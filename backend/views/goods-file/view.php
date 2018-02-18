@@ -11,7 +11,7 @@ $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Files'), 'url' => ['index','goods_id'=>$model->goods_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="goods-file-view">
+<div class="card">
 
     <div class="row">
     <div class="col-sm-6 lead">

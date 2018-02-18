@@ -21,7 +21,7 @@ use common\helpers\Heart;
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
 
     <?php 
-    echo "<p class='lead'>"."Comment of ".Heart::getUser($model->user_id).' for '.$model->goods->name.'</p>';
+    echo "<p class='lead'>"."Comment of ".Heart::getUser((int)$model->user_id).' for '.$model->goods->name.'</p>';
     ?>
 
     <?= $form->field($model, 'review')->textarea(['rows' => 6]) ?>

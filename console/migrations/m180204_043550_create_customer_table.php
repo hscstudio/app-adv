@@ -27,7 +27,9 @@ class m180204_043550_create_customer_table extends Migration
             'avatar' => $this->string(255),
             'address' => $this->text(),
             'phone' => $this->string(50),
+            'id_card' => $this->string(255),
             'level' => $this->smallInteger()->defaultValue(1), // PREMIUM','REGULER'
+            'point' => $this->integer()->defaultValue(0),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
             'created_by' => $this->integer(),

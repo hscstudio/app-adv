@@ -11,7 +11,7 @@ $this->title = 'View User #'.$model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-view">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">

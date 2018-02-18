@@ -11,7 +11,7 @@ $this->title = Yii::t('app', 'Create Reservation');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Reservations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="reservation-create">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">

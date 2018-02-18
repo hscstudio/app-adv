@@ -4,10 +4,16 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Reservation;
+use common\models\CustomerShipment;
+use backend\models\ReservationSearch;
+use common\models\ReservationDetail;
+use backend\models\ReservationDetailSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\helpers\Heart;
+use yii\web\UploadedFile;
 
 /**
  * ReservationController implements the CRUD actions for Reservation model.
@@ -35,11 +41,11 @@ class ReservationController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Reservation::find(),
-        ]);
+        $searchModel = new ReservationSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -52,8 +58,24 @@ class ReservationController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $model->start = Heart::dateTimeFormat($model->start,'Y-m-d H:i:s','d F Y');
+        $model->end = Heart::dateTimeFormat($model->end,'Y-m-d H:i:s','d F Y');
+        $file_ext = '-';
+        if(strlen($model->payment_proof)>4){
+            $file_ext = pathinfo($model->payment_proof, PATHINFO_EXTENSION); 
+        }
+
+        $searchModel = new ReservationDetailSearch([
+            'reservation_id' => $id,
+        ]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'file_ext' => $file_ext,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -66,10 +88,28 @@ class ReservationController extends Controller
     {
         $model = new Reservation();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->start = Heart::dateTimeFormat($model->start,'d F Y','Y-m-d H:i:s');
+            $model->end = Heart::dateTimeFormat($model->end,'d F Y','Y-m-d H:i:s');
+            $model->save();
+            $payment_proof_new = UploadedFile::getInstance($model, 'payment_proof_new');
+            if ($payment_proof_new) {
+                $safe_filename = \Yii::$app->security->generateRandomString();                
+                $filename = $safe_filename . '.' . $payment_proof_new->extension;
+                $path = Heart::getUploadPath('reservation/'.$model->id.'/');
+                $upload = $payment_proof_new->saveAs($path . $filename);
+                if($upload) {
+                    $model->payment_proof = $filename;
+                }
+            }
+            $model->save();
+            Yii::$app->session->setFlash('success', 'Create successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $model->start = (new \DateTime())->format('d F Y');
+        $model->end = (new \DateTime())->modify('+1 day')->format('d F Y');
+        
         return $this->render('create', [
             'model' => $model,
         ]);
@@ -86,12 +126,34 @@ class ReservationController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->start = Heart::dateTimeFormat($model->start,'d F Y','Y-m-d H:i:s');
+            $model->end = Heart::dateTimeFormat($model->end,'d F Y','Y-m-d H:i:s');
+            $payment_proof_new = UploadedFile::getInstance($model, 'payment_proof_new');
+            if ($payment_proof_new) {
+                $safe_filename = \Yii::$app->security->generateRandomString();                
+                $filename = $safe_filename . '.' . $payment_proof_new->extension;
+                $path = Heart::getUploadPath('reservation/'.$id.'/');
+                $upload = $payment_proof_new->saveAs($path . $filename);
+                if($upload) {
+                    @unlink($path . $model->payment_proof);
+                    $model->payment_proof = $filename;
+                }
+            }
+            $model->save();
+            Yii::$app->session->setFlash('success', 'Update successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $model->start = Heart::dateTimeFormat($model->start,'Y-m-d H:i:s','d F Y');
+        $model->end = Heart::dateTimeFormat($model->end,'Y-m-d H:i:s','d F Y');
+        $file_ext = '-';
+        if(strlen($model->payment_proof)>4){
+            $file_ext = pathinfo($model->payment_proof, PATHINFO_EXTENSION); 
+        }      
         return $this->render('update', [
             'model' => $model,
+            'file_ext' => $file_ext,
         ]);
     }
 
@@ -105,6 +167,7 @@ class ReservationController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        Yii::$app->session->setFlash('success', 'Delete successful');
 
         return $this->redirect(['index']);
     }
@@ -123,5 +186,20 @@ class ReservationController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    public function actionSetDetailStatus(int $reservation_id, int $goods_id, int $status)
+    {
+        $rd = ReservationDetail::find()->where([
+            'reservation_id'=>$reservation_id,
+            'goods_id'=>$goods_id,
+        ])->one();
+        if($rd){
+            $rd->status = $status;
+            $rd->save();
+            Yii::$app->session->setFlash('success', 'Update status successful');
+            //die(print_r($rd->errors));
+        }
+        return $this->redirect(['view', 'id' => $reservation_id]);
     }
 }

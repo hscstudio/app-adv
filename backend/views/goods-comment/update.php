@@ -13,11 +13,11 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Comments'), 'u
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="goods-comment-update">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">
-            <?= Heart::icon('comment-alt').' '.Html::encode($this->title) ?>
+            <?= Heart::icon('comment').' '.Html::encode($this->title) ?>
         </div>
         <div class="col-sm-6 text-right">
         <p>

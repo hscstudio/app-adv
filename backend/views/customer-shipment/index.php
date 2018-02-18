@@ -11,7 +11,7 @@ use common\helpers\Heart;
 $this->title = 'Shipments: '.' "'.$customer->name.'"';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="customer-shipment-index">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">

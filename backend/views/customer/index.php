@@ -11,7 +11,7 @@ use common\helpers\Heart;
 $this->title = Yii::t('app', 'Customers');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="customer-index">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">

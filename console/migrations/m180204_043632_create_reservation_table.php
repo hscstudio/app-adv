@@ -20,7 +20,7 @@ class m180204_043632_create_reservation_table extends Migration
   
         $this->createTable('reservation', [
             'id' => $this->primaryKey(),
-            'user_id' => $this->integer()->unique()->notNull(),
+            'user_id' => $this->integer()->notNull(),
             'start' => $this->dateTime()->notNull(),
             'end' => $this->dateTime()->notNull(),
             'warranty' => $this->text(),

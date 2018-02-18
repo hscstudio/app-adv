@@ -11,11 +11,11 @@ $this->title = 'View Comment #'.$model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Files'), 'url' => ['index','goods_id'=>$model->goods_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="goods-comment-view">
+<div class="card">
 
     <div class="row">
     <div class="col-sm-6 lead">
-        <?= Heart::icon('file').' '.Html::encode($this->title) ?>
+        <?= Heart::icon('comment').' '.Html::encode($this->title) ?>
     </div>
     <div class="col-sm-6 text-right">
     <p>
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'User',
                 'format' => 'html',
                 'value'=>function($data){
-                    return Heart::getUser($data->updated_by);
+                    return Heart::getUser($data->user_id);
                 }
             ],
             'review:ntext',

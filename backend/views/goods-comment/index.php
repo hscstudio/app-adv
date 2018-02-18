@@ -8,10 +8,10 @@ use common\helpers\Heart;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Goods Comments');
+$this->title = 'Comment: '.' "'.$goods->name.'"';;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="goods-comment-index">
+<div class="card">
 
     <div class="row">
     <div class="col-sm-6 lead">

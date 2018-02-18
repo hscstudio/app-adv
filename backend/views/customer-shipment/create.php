@@ -10,7 +10,7 @@ $this->title = Yii::t('app', 'Create Customer Shipment');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Customer Shipments'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="customer-shipment-create">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">

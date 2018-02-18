@@ -11,11 +11,11 @@ $this->title = Yii::t('app', 'Create Goods Comment');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Comments'), 'url' => ['index','goods_id'=>$model->goods_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="goods-comment-create">
+<div class="card">
 
     <div class="row">
         <div class="col-sm-6 lead">
-            <?= Heart::icon('comment-alt').' '.Html::encode($this->title) ?>
+            <?= Heart::icon('comment').' '.Html::encode($this->title) ?>
         </div>
         <div class="col-sm-6 text-right">
         <p>

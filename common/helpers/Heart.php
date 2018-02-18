@@ -12,6 +12,12 @@ class Heart
         return ($date)?$date->format($to_format):'';
     }
 
+    public static function dateTimeFormat($str_datetime,$from_format,$to_format)
+    {
+        $dateTime = \DateTime::createFromFormat($from_format, $str_datetime);
+        return ($dateTime)?$dateTime->format($to_format):'';
+    }
+
     public static function getUser(int $id)
     {
         $user = User::findOne($id);

@@ -42,8 +42,6 @@ class ReservationDetail extends \yii\db\ActiveRecord
         return [
             [['reservation_id', 'goods_id'], 'required'],
             [['reservation_id', 'goods_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'status'], 'integer'],
-            [['reservation_id'], 'unique'],
-            [['goods_id'], 'unique'],
         ];
     }
 
@@ -70,5 +68,12 @@ class ReservationDetail extends \yii\db\ActiveRecord
     public static function find()
     {
         return new ReservationDetailQuery(get_called_class());
+    }
+
+    public function getGoods()
+    {
+        return $this->hasOne(
+            Goods::className(),['id'=>'goods_id']
+        );
     }
 }

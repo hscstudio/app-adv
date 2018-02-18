@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\Goods;
 use common\models\GoodsReview;
+use backend\models\GoodsReviewSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -33,14 +35,20 @@ class GoodsReviewController extends Controller
      * Lists all GoodsReview models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex(int $goods_id)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => GoodsReview::find(),
-        ]);
+        $goods = Goods::findOne($goods_id);
+
+        $searchModel = new GoodsReviewSearch(['goods_id' => $goods_id]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->sort->defaultOrder = [
+            'created_at'=>SORT_ASC
+        ];
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'goods' => $goods,
         ]);
     }
 
@@ -62,11 +70,12 @@ class GoodsReviewController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate(int $goods_id)
     {
-        $model = new GoodsReview();
+        $model = new GoodsReview(['goods_id' => $goods_id,]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Create successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -87,6 +96,7 @@ class GoodsReviewController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Update successful');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -105,6 +115,7 @@ class GoodsReviewController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        Yii::$app->session->setFlash('success', 'Delete successful');
 
         return $this->redirect(['index']);
     }
