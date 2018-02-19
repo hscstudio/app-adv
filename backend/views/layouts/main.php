@@ -81,11 +81,11 @@ AppAsset::register($this);
 </div>';
 
     $menuItems[] = ['icon' => Heart::icon('list-alt'), 'label' => 'Menu', 'url'=>'#submenu1', 'items' => [
-        ['icon' => Heart::icon('users'), 'label' =>' User', 'url' => ['/user/index']],
-        ['icon' => Heart::icon('id-card'), 'label' =>' Customer', 'url' => ['/customer/index']],
-        ['icon' => Heart::icon('tags'), 'label' =>' Goods Category', 'url' => ['/goods-category/index']],
-        ['icon' => Heart::icon('cubes'), 'label' =>' Goods', 'url' => ['/goods/index']],
-        ['icon' => Heart::icon('calendar-check'), 'label' =>' Reservation', 'url' => ['/reservation/index']],
+        ['icon' => Heart::icon('users'), 'label' =>' User', 'url' => ['/user/index'], 'path' => '/user/'],
+        ['icon' => Heart::icon('id-card'), 'label' =>' Customer', 'url' => ['/customer/index'], 'path' => '/customer/'],
+        ['icon' => Heart::icon('tags'), 'label' =>' Goods Category', 'url' => ['/goods-category/index'], 'path' => '/goods-category/'],
+        ['icon' => Heart::icon('cubes'), 'label' =>' Goods', 'url' => ['/goods/index'], 'path' => '/goods/'],
+        ['icon' => Heart::icon('calendar-check'), 'label' =>' Reservation', 'url' => ['/reservation/index'], 'path' => '/reservation/'],
     ]];
     echo NavSide::widget([
         //'options' => ['class' => 'navbar-nav'],

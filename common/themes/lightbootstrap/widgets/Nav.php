@@ -290,6 +290,15 @@ class Nav extends Widget
             if ($route[0] !== '/' && Yii::$app->controller) {
                 $route = Yii::$app->controller->module->getUniqueId() . '/' . $route;
             }
+
+            if (isset($item['path'])) {
+                $path = $item['path'];
+                $current_route = '/'.Yii::$app->urlManager->parseRequest(Yii::$app->request)[0];
+                if(strpos($current_route, $path)!==false){
+                    return true;
+                }
+            }
+
             if (ltrim($route, '/') !== $this->route) {
                 return false;
             }
